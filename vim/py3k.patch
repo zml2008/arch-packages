@@ -1,0 +1,44 @@
+--- vim-old/PKGBUILD	2013-07-20 21:27:00.960261016 -0700
++++ vim/PKGBUILD	2013-07-20 21:30:13.524162280 -0700
+@@ -84,9 +84,9 @@ build() {
+     --disable-netbeans \
+     --enable-perlinterp \
+     --disable-pythoninterp \
+-    --disable-python3interp \
+-    --disable-rubyinterp \
+-    --disable-luainterp
++    --enable-python3interp \
++    --enable-rubyinterp \
++    --enable-luainterp
+ 
+   make
+ 
+@@ -105,8 +105,8 @@ build() {
+     --enable-cscope \
+     --enable-netbeans \
+     --enable-perlinterp \
+-    --enable-pythoninterp \
+-    --disable-python3interp \
++    --disable-pythoninterp \
++    --enable-python3interp \
+     --enable-rubyinterp \
+     --enable-luainterp
+ 
+@@ -127,7 +127,7 @@ check() {
+ 
+ package_vim() {
+   pkgdesc='Vi Improved, a highly configurable, improved version of the vi text editor'
+-  depends=("vim-runtime=${pkgver}-${pkgrel}" 'gpm')
++  depends=("vim-runtime=${pkgver}-${pkgrel}" 'gpm' 'ruby' 'lua' 'python')
+   conflicts=('gvim')
+ 
+   cd "${srcdir}"/vim-build
+@@ -155,7 +155,7 @@ package_vim() {
+ package_gvim() {
+   pkgdesc='Vi Improved, a highly configurable, improved version of the vi text editor (with advanced features, such as a GUI)'
+   depends=("vim-runtime=${pkgver}-${pkgrel}" 'gpm' 'ruby' 'libxt'
+-           'desktop-file-utils' 'gtk2' 'lua' 'python2')
++           'desktop-file-utils' 'gtk2' 'lua' 'python')
+   provides=("vim=${pkgver}-${pkgrel}")
+   conflicts=('vim')
+   install=gvim.install

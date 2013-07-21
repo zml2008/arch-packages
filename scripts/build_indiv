@@ -1,0 +1,44 @@
+#!/bin/bash
+
+PKG_DESC=$1
+
+if [[ ! -e "$PKG_DESC" ]]; then
+    echo "Unknown file: $PKG_DESC"
+    exit 1
+fi
+
+source $PKG_DESC
+STARTDIR=$PWD
+REPO=${PKG%/*}
+PACKAGE=${PKG##*/}
+
+mkdir -p build out > /dev/null
+
+pushd build > /dev/null
+
+if [[ "$REPO" = "aur" ]]; then
+    cower -d $PACKAGE || echo "Unable to get package ${PACKAGE}"; exit 1
+else
+    sudo abs $PKG || (echo "Unable to get package ${PKGNAME} from ABS"; exit 1)
+    cp -r /var/abs/${PKG} ${PACKAGE}
+fi
+
+pushd "$PACKAGE" > /dev/null
+
+if [ -n "$PATCHES" ]; then # TODO: Allow patching the source itself by adding to the PKGBUILD
+    for patch in `echo $STARTDIR/$PATCHES`; do
+        patch -p1 < $patch
+    done
+fi
+
+if [-n "$ADD_FILES" ]; then
+    echo $ADD_FILES
+    # copy files into srcdir
+fi
+
+
+makepkg -s || exit 1
+cp *.pkg.tar.xz ../../out
+popd > /dev/null 
+
+popd > /dev/null 
